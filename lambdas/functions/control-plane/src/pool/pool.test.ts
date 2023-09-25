@@ -1,6 +1,6 @@
 import { Octokit } from '@octokit/rest';
 import { mocked } from 'jest-mock';
-import moment from 'moment-timezone';
+import { DateTime } from 'luxon';
 import nock from 'nock';
 
 import { listEC2Runners } from '../aws/runners';
@@ -64,9 +64,9 @@ const ec2InstancesRegistered = [
   },
   {
     instanceId: 'i-4-idle-older-than-minimum-time-running',
-    launchTime: moment(new Date())
-      .subtract(MINIMUM_TIME_RUNNING + 3, 'minutes')
-      .toDate(),
+    launchTime: DateTime.now()
+      .minus({ minutes: MINIMUM_TIME_RUNNING + 3 })
+      .toJSDate(),
     type: 'Org',
     owner: ORG,
   },
@@ -187,17 +187,17 @@ describe('Test simple pool.', () => {
         ...ec2InstancesRegistered,
         {
           instanceId: 'i-4-still-booting',
-          launchTime: moment(new Date())
-            .subtract(MINIMUM_TIME_RUNNING - 3, 'minutes')
-            .toDate(),
+          launchTime: DateTime.now()
+            .minus({ minutes: MINIMUM_TIME_RUNNING - 3 })
+            .toJSDate(),
           type: 'Org',
           owner: ORG,
         },
         {
           instanceId: 'i-5-orphan',
-          launchTime: moment(new Date())
-            .subtract(MINIMUM_TIME_RUNNING + 3, 'minutes')
-            .toDate(),
+          launchTime: DateTime.now()
+            .minus({ minutes: MINIMUM_TIME_RUNNING + 3 })
+            .toJSDate(),
           type: 'Org',
           owner: ORG,
         },
@@ -217,17 +217,17 @@ describe('Test simple pool.', () => {
         ...ec2InstancesRegistered,
         {
           instanceId: 'i-4-still-booting',
-          launchTime: moment(new Date())
-            .subtract(MINIMUM_TIME_RUNNING - 3, 'minutes')
-            .toDate(),
+          launchTime: DateTime.now()
+            .minus({ minutes: MINIMUM_TIME_RUNNING - 3 })
+            .toJSDate(),
           type: 'Org',
           owner: ORG,
         },
         {
           instanceId: 'i-5-orphan',
-          launchTime: moment(new Date())
-            .subtract(MINIMUM_TIME_RUNNING + 3, 'minutes')
-            .toDate(),
+          launchTime: DateTime.now()
+            .minus({ minutes: MINIMUM_TIME_RUNNING + 3 })
+            .toJSDate(),
           type: 'Org',
           owner: ORG,
         },

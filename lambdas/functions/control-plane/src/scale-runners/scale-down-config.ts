@@ -14,6 +14,7 @@ export interface ScalingDownConfig {
 const logger = createChildLogger('scale-down-config.ts');
 
 function inPeriod(period: ScalingDownConfig): boolean {
+  // TODO: exchange moment
   const now = moment(new Date());
   const expr = parser.parseExpression(period.cron, {
     tz: period.timeZone,

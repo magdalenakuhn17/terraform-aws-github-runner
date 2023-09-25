@@ -1,6 +1,6 @@
 import { Octokit } from '@octokit/rest';
 import { createChildLogger } from '@terraform-aws-github-runner/aws-powertools-util';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 
 import { createGithubAppAuth, createGithubInstallationAuth, createOctoClient } from '../gh-auth/gh-auth';
 import { bootTimeExceeded, listEC2Runners, terminateRunner } from './../aws/runners';
@@ -94,8 +94,10 @@ async function listGitHubRunners(runner: RunnerInfo): Promise<GhRunners> {
 
 function runnerMinimumTimeExceeded(runner: RunnerInfo): boolean {
   const minimumRunningTimeInMinutes = process.env.MINIMUM_RUNNING_TIME_IN_MINUTES;
-  const launchTimePlusMinimum = moment(runner.launchTime).utc().add(minimumRunningTimeInMinutes, 'minutes');
-  const now = moment(new Date()).utc();
+  const launchTimePlusMinimum = DateTime.fromISO(runner.launchTime, { zone: 'utc' }).plus({
+    minutes: minimumRunningTimeInMinutes,
+  });
+  const now = DateTime.now().toUTC();
   return launchTimePlusMinimum < now;
 }
 
