@@ -1,6 +1,6 @@
 import { createChildLogger } from '@terraform-aws-github-runner/aws-powertools-util';
 import parser from 'cron-parser';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 
 export type ScalingDownConfigList = ScalingDownConfig[];
 export type EvictionStrategy = 'newest_first' | 'oldest_first';
@@ -14,13 +14,12 @@ export interface ScalingDownConfig {
 const logger = createChildLogger('scale-down-config.ts');
 
 function inPeriod(period: ScalingDownConfig): boolean {
-  // TODO: exchange moment
-  const now = moment(new Date());
+  const now = DateTime.now();
   const expr = parser.parseExpression(period.cron, {
     tz: period.timeZone,
   });
-  const next = moment(expr.next().toDate());
-  return Math.abs(next.diff(now, 'seconds')) < 5; // we keep a range of 5 seconds
+  const next = DateTime.fromJSDate(expr.next().toDate());
+  return Math.abs(next.diff(now, 'seconds').as("seconds")) < 5; // we keep a range of 5 seconds
 }
 
 export function getIdleRunnerCount(scalingDownConfigs: ScalingDownConfigList): number {

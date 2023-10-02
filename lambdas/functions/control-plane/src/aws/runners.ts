@@ -230,8 +230,13 @@ export async function createRunner(runnerParameters: Runners.RunnerInputParamete
 
 // If launchTime is undefined, this will return false
 export function bootTimeExceeded(ec2Runner: { launchTime?: Date }): boolean {
+  if (!ec2Runner.launchTime) {
+    return false;
+  }
+
   const runnerBootTimeInMinutes = process.env.RUNNER_BOOT_TIME_IN_MINUTES;
-  // exchange moment
-  const launchTimePlusBootTime = DateTime.fromISO(ec2Runner.launchTime, { zone: 'utc' }).plus({ minutes: runnerBootTimeInMinutes });
+  const launchTimePlusBootTime = DateTime.fromJSDate(ec2Runner.launchTime, { zone: 'utc' }).plus({
+    minutes: Number(runnerBootTimeInMinutes),
+  });
   return launchTimePlusBootTime < DateTime.now().toUTC();
 }

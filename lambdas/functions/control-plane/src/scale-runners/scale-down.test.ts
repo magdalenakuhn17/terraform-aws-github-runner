@@ -353,7 +353,7 @@ describe('Scale down runners', () => {
       expect(mockOctokit.apps.getRepoInstallation).not;
     });
 
-    it('Should terminates 3 of 5 runners owned by repos and one orphaned', async () => {
+    it('Should terminate 3 of 5 runners owned by repos and one orphaned', async () => {
       mockListRunners.mockResolvedValue(DEFAULT_RUNNERS_REPO);
       await scaleDown();
       expect(listEC2Runners).toBeCalledWith({
@@ -371,7 +371,7 @@ describe('Scale down runners', () => {
       }
     });
 
-    it('Should terminates 2 of 3 runners owned by orgs and one orphaned', async () => {
+    it('Should terminate 2 of 3 runners owned by orgs and one orphaned', async () => {
       mockListRunners.mockResolvedValue(DEFAULT_RUNNERS_ORG);
       await scaleDown();
       expect(listEC2Runners).toBeCalledWith({
@@ -418,7 +418,7 @@ describe('Scale down runners', () => {
         expect(terminateRunner).toBeCalledTimes(2);
       });
 
-      it('Should terminates 0 runners owned by org', async () => {
+      it('Should terminate 0 runners owned by org', async () => {
         mockListRunners.mockResolvedValue(RUNNERS_REPO_WITH_AUTO_SCALING_CONFIG);
         await scaleDown();
 
@@ -430,7 +430,7 @@ describe('Scale down runners', () => {
         expect(terminateRunner).not.toBeCalled();
       });
 
-      it('Should terminates the newest runner.', async () => {
+      it('Should terminate the newest runner.', async () => {
         process.env.SCALE_DOWN_CONFIG = JSON.stringify([{ ...defaultConfig, evictionStrategy: 'newest_first' }]);
 
         mockListRunners.mockResolvedValue(RUNNERS_ORG_WITH_AUTO_SCALING_CONFIG);
@@ -456,7 +456,7 @@ describe('Scale down runners', () => {
       expect(terminateRunner).not.toBeCalled;
     });
 
-    it('Should terminates 4 runners amongst all owners and two orphaned', async () => {
+    it('Should terminate 4 runners amongst all owners and two orphaned', async () => {
       mockListRunners.mockResolvedValue(DEFAULT_RUNNERS);
       await scaleDown();
 
@@ -492,7 +492,7 @@ describe('Scale down runners', () => {
       expect(mockOctokit.apps.getRepoInstallation).not;
     });
 
-    it('Should terminates 3 of 5 runners owned by repos and one orphaned', async () => {
+    it('Should terminate 3 of 5 runners owned by repos and one orphaned', async () => {
       mockListRunners.mockResolvedValue(DEFAULT_RUNNERS_REPO);
       await scaleDown();
       expect(listEC2Runners).toBeCalledWith({
@@ -509,7 +509,7 @@ describe('Scale down runners', () => {
       }
     });
 
-    it('Should terminates 2 of 3 runners owned by orgs and one orphaned', async () => {
+    it('Should terminate 2 of 3 runners owned by orgs and one orphaned', async () => {
       mockListRunners.mockResolvedValue(DEFAULT_RUNNERS_ORG);
       await scaleDown();
       expect(listEC2Runners).toBeCalledWith({
@@ -538,7 +538,7 @@ describe('Scale down runners', () => {
         ]);
       });
 
-      it('Should terminates 1 runner owned by orgs', async () => {
+      it('Should terminate 1 runner owned by orgs', async () => {
         mockListRunners.mockResolvedValue(RUNNERS_ORG_WITH_AUTO_SCALING_CONFIG);
         await scaleDown();
 
@@ -553,7 +553,7 @@ describe('Scale down runners', () => {
         }
       });
 
-      it('Should terminates 0 runners owned by repos', async () => {
+      it('Should terminate 0 runners owned by repos', async () => {
         mockListRunners.mockResolvedValue(RUNNERS_REPO_WITH_AUTO_SCALING_CONFIG);
         process.env.ENABLE_ORGANIZATION_RUNNERS = 'false';
         await scaleDown();
@@ -567,7 +567,7 @@ describe('Scale down runners', () => {
       });
     });
 
-    it('Should terminates 4 runners amongst all owners and two orphaned', async () => {
+    it('Should terminate 4 runners amongst all owners and two orphaned', async () => {
       mockListRunners.mockResolvedValue(DEFAULT_RUNNERS);
       await scaleDown();
 
