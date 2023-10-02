@@ -9,7 +9,7 @@ import {
 } from '@aws-sdk/client-ec2';
 import { createChildLogger } from '@terraform-aws-github-runner/aws-powertools-util';
 import { getParameter } from '@terraform-aws-github-runner/aws-ssm-util';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 
 import ScaleError from './../scale-runners/ScaleError';
 import * as Runners from './runners.d';
@@ -230,7 +230,13 @@ export async function createRunner(runnerParameters: Runners.RunnerInputParamete
 
 // If launchTime is undefined, this will return false
 export function bootTimeExceeded(ec2Runner: { launchTime?: Date }): boolean {
+  if (!ec2Runner.launchTime) {
+    return false;
+  }
+
   const runnerBootTimeInMinutes = process.env.RUNNER_BOOT_TIME_IN_MINUTES;
-  const launchTimePlusBootTime = moment(ec2Runner.launchTime).utc().add(runnerBootTimeInMinutes, 'minutes');
-  return launchTimePlusBootTime < moment(new Date()).utc();
+  const launchTimePlusBootTime = DateTime.fromJSDate(ec2Runner.launchTime, { zone: 'utc' }).plus({
+    minutes: Number(runnerBootTimeInMinutes),
+  });
+  return launchTimePlusBootTime < DateTime.now().toUTC();
 }
